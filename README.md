@@ -55,7 +55,7 @@ o=9 means that 9 latches variable influences the output function (i.e. the outpu
 
 or with seeds. Note that the number of seeds must be equal to l + 1
 
-python Convert-Int-To-Bdd_out.py -output random_n_14_4_3_7_6.aag -c 4 -u 3 -l 7 -o 6 -seeds 1589315720245050 1589315720836518 1589315721306326 1589315721746553 1589315722185292 1589315722596544 1589315722995663 1589315723406943 -oseed 1589315723415047 -noABC 1
+python aigen.py -output random_n_14_4_3_7_6.aag -c 4 -u 3 -l 7 -o 6 -seeds 1589315720245050 1589315720836518 1589315721306326 1589315721746553 1589315722185292 1589315722596544 1589315722995663 1589315723406943 -oseed 1589315723415047 -noABC 1
 
 oseed is the seed for the random 6 variables chosen out of 7 latches.
 -noABC 1 is an optional parameter which means that we do not want to run ABC and obtain a reduced version. The files of the table in the paper were generated with "-noABC 1"
