@@ -17,7 +17,7 @@ To install it manually:
 8- run the command: sudo dpkg -i libreadline-dev_7.0-3_amd64.deb
 9- Open abc-master folder
 10- run the command: make
-11- copy the executable "abc" to parent folder i.e. in the same location of "Convert-Int-To-Bdd_out.py"
+11- copy the executable "abc" to parent folder i.e. in the same location of "aigen.py"
 12- run the command: sudo apt install python-pip
 13- run the command: sudo apt-get install libgmp-dev
 14- run the command: sudo apt-get install libmpfr-dev
@@ -27,7 +27,7 @@ To install it manually:
                            **********************************************************
 To run the tool execute the command: 
 
-python Convert-Int-To-Bdd_out.py -output file1.aag -c 1 -u 1 -l 10 -o 9
+python aigen.py -output file1.aag -c 1 -u 1 -l 10 -o 9
 
 where:
 
