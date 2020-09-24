@@ -1,30 +1,46 @@
 # AIGEN-Tool
 AIGEN is an open source tool for the generation of transition systems in the symbolic representation "AIGER". To ensure diversity, it employs a uniform random sampling over the space of all Boolean functions with a given number of variables. AIGEN relies on the fact that ROBDDs are canonical representations of Boolean functions, and uses an approach that is inspired by data structures used to implement ROBDDs. Several parameters allow the user to restrict random generation to certain types of Boolean functions or transition systems, which are then output in AIGER format.
 
-To install the tool execute ./setup.sh
+To install the tool execute: ./setup.sh
 
                            **********************************************************
 
 To install it manually:
 
 1- Unzip AIGEN Tool
+
 2- Open to mpmath-1.1.0 Folder
+
 3- run the command: sudo python setup.py install
+
 4- Open aiger-1.9.9 Folder
+
 5- run the command ./configure.sh && make
+
 6- copy the executable "aigtoaig" to parent folder i.e. in the same location of "Convert-Int-To-Bdd_out.py"
+
 7- run the command: sudo apt-get install libtinfo-dev
+
 8- run the command: sudo dpkg -i libreadline-dev_7.0-3_amd64.deb
+
 9- Open abc-master folder
+
 10- run the command: make
+
 11- copy the executable "abc" to parent folder i.e. in the same location of "aigen.py"
+
 12- run the command: sudo apt install python-pip
+
 13- run the command: sudo apt-get install libgmp-dev
+
 14- run the command: sudo apt-get install libmpfr-dev
+
 15- run the command: sudo apt-get install libmpc-dev
+
 16- run the command: pip install gmpy2
                                                       
                            **********************************************************
+                           
 To run the tool execute the command: 
 
 python aigen.py -output file1.aag -c 1 -u 1 -l 10 -o 9
