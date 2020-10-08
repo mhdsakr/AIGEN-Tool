@@ -1,5 +1,5 @@
 # AIGEN-Tool
-AIGEN is an open source tool for the generation of transition systems in the symbolic representation "AIGER". To ensure diversity, it employs a uniform random sampling over the space of all Boolean functions with a given number of variables. AIGEN relies on the fact that ROBDDs are canonical representations of Boolean functions, and uses an approach that is inspired by data structures used to implement ROBDDs. Several parameters allow the user to restrict random generation to certain types of Boolean functions or transition systems, which are then output in AIGER format.
+AIGEN is an open source tool for the generation of transition systems in the symbolic representation "AIGER". To ensure diversity, it employs a uniform random sampling over the space of all Boolean functions with a given number of variables. AIGEN relies on the fact that ROBDDs are canonical representations of Boolean functions, and uses an approach that is inspired by data structures used to implement ROBDDs. Several parameters allow the user to restrict random generation to certain types of Boolean functions or transition systems, which are then output in AIGER format. Alternatively a user can choose a canonical dnf based aproach for the random generation of transition systems instead of the BDD approach.
 
 To install the tool execute: ./setup.sh
 
@@ -43,11 +43,12 @@ To install it manually:
                            
 To run the tool execute the command: 
 
-python aigen.py -output file1.aag -c 1 -u 1 -l 10 -o 9
+python aigen.py -bdd -output file1.aag -c 1 -u 1 -l 10 -o 9
 
 where:
 
 FileName.aag is the file name to be generated
+-bdd means that use a bdd based random generation. When replaced by -dnf the tool will use canonical DNF based random generation.
 c=1 means 1 controllable input
 u=1 means 1 uncontrollable inputs
 l=10 means 10 latches (i.e. the tool will generate 12 boolean functions over 15 variables)
