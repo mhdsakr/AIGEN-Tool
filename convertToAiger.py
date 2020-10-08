@@ -130,6 +130,7 @@ def internal_create_aiger(fileName, u_nb, c_nb,latches,seeds,oseed,output_lit, a
     fileOb.write('output ' + str(len(seeds) - 1) + ' seed: ' + str(seeds[len(seeds) - 1]) + os.linesep)
     fileOb.write('output vars seed: ' + str(oseed) + os.linesep)
     fileOb.close()
+    return len(andGates)
 
 def conertToAiger(fileName, u_nb, c_nb, var_nb, latches_nb, outVarnb, top_var_index, fctIDs, outfctID, seeds, oseed, bdd_tuple, outbdd_tuple):
     global maxLit
@@ -150,8 +151,8 @@ def conertToAiger(fileName, u_nb, c_nb, var_nb, latches_nb, outVarnb, top_var_in
     
     bdd_to_lit.clear()
     out_bdd_to_lit = dict()
-    #output_lit = generateConfigurableOutput(input_nb, latches_nb, outVarnb)
-    #handle output
+    ## the below random are for the variables picked to be in the function, and
+    ## has nothing to do with the seed used to generate the function itself
     needRandom = (latches_nb - outVarnb) != 0
     if needRandom:
         if(oseed is None or oseed == 0):
@@ -160,7 +161,8 @@ def conertToAiger(fileName, u_nb, c_nb, var_nb, latches_nb, outVarnb, top_var_in
         else:
             random.seed(oseed)
         global oseedVars
-        oseedVars = random.sample(range(1, latches_nb + 1), outVarnb)[:]
+        latchesRange = range(1, latches_nb + 1)
+        oseedVars = random.sample(latchesRange, outVarnb)[:]
         oseedVars.insert(0,-1)#this as levelindex starts from 1
         output_lit = convertToAndGate(outfctID, getAIGVarIdx_out_random, outbdd_tuple, input_nb, andGates, out_bdd_to_lit)
     else:
@@ -170,10 +172,13 @@ def conertToAiger(fileName, u_nb, c_nb, var_nb, latches_nb, outVarnb, top_var_in
         #functions should be only latches indices.
 
     #compute the cube of the remiaining variables of the latches if any
-    cubeSize = latches_nb - outVarnb
-    if cubeSize > 0:
-        counter = 0
-        while outVarnb + counter < latches_nb:
-            output_lit = createAndGate(output_lit, getAIGVarIdx_out(outVarnb + counter +1, input_nb), andGates)
-            counter += 1
-    internal_create_aiger(fileName, u_nb, c_nb,latches,seeds,oseed,output_lit,andGates)
+    if needRandom:
+        for r in latchesRange:
+            if r not in oseedVars:
+                output_lit = createAndGate(output_lit, getAIGVarIdx_out(r, input_nb), andGates)
+        #counter = 0
+        #while outVarnb + counter < latches_nb:
+        #    output_lit = createAndGate(output_lit, getAIGVarIdx_out(outVarnb + counter +1, input_nb), andGates)
+        #    print ("error: " + str(getAIGVarIdx_out(outVarnb + counter +1, input_nb)))
+        #    counter += 1
+    return internal_create_aiger(fileName, u_nb, c_nb,latches,seeds,oseed,output_lit,andGates)
