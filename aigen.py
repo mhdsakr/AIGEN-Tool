@@ -1,15 +1,14 @@
 import argparse
 import time
-import convertToAiger
-import GenerateBDDs
 import ABCMinimization
 import os
 import sys
+import ntpath
+
 
 if __name__ == '__main__':
-####################End of Converting BDD to AIG ###############################
     startTime = int(round(time.time() * 1000))
-    
+
     var_nb = 0  # total nuumber of variables in the aiger file
     input_nb = 0  # total number of inputs in the aiger
     u_nb = 0  # number of uncontrollable input
@@ -28,7 +27,11 @@ if __name__ == '__main__':
     parser.add_argument('-o','--outputs',help='Number of output variables', type=int, required=True)
     parser.add_argument('-seeds','--seeds',help='list of seeds to be used for the random number generation', nargs='+', type=int, required=False)
     parser.add_argument('-oseed','--oseed',help='seed for the output function variables',type=int, required=False)
-    parser.add_argument('-noABC','--noABC',help='stop ABC tool',type=int, default=0, required=False)
+    parser.add_argument('-noABC','--noABC',help='stop ABC tool', default=False, required=False, action='store_true')
+    parser.add_argument('-bdd','--bdd',help='bdd based generation', default=False, required=False, action='store_true')
+    parser.add_argument('-dnf','--dnf',help='DNF based generation', default=False, required=False, action='store_true')
+    
+    
     
     args = parser.parse_args()
     if args.controllables <= 0 or args.uncontrollables <= 0 or args.latches <= 0 or args.outputs <= 0:
@@ -36,7 +39,11 @@ if __name__ == '__main__':
     if args.outputs > args.latches :
         sys.exit("Error: Number of outputs variables must be smaller or equal to number of latches!")
     if args.seeds is not None and len(args.seeds) > 0 and len(args.seeds) > (args.latches + 1):
-        sys.exit("Error: Number of seeds must be equal to l+1")    
+        sys.exit("Error: Number of seeds must be equal to l+1")
+    bddBased = args.bdd
+    dnfBased = args.dnf
+    if not (bddBased or dnfBased):
+        dnfBased = True
     fileName = args.outputFile
     c_nb = args.controllables
     u_nb = args.uncontrollables
@@ -54,14 +61,24 @@ if __name__ == '__main__':
     # top(max) var index represents also the number of variables
     
     startTime = int(round(time.time() * 1000))
-    fctIDs, outfctID, bdd_tuple, out_bdd_tuple, seeds = GenerateBDDs.generate_latches_fct(var_nb, latches_nb, outVarnb, top_var_index, input_nb, inputSeeds)
-    print (len(bdd_tuple))
-    print (len(out_bdd_tuple))
-    convertToAiger.conertToAiger(fileName, u_nb, c_nb, var_nb, latches_nb, outVarnb, top_var_index, fctIDs, outfctID,seeds,oseed, bdd_tuple, out_bdd_tuple)
-    print (fileName + ': ', int(round(time.time() * 1000)) - startTime)
-    if noABC == 0:
+    andGatesSize = 0
+    if bddBased:
+        import convertToAiger
+        import GenerateBDDs
+        fctIDs, outfctID, bdd_tuple, out_bdd_tuple, seeds = GenerateBDDs.generate_latches_fct(var_nb, latches_nb, outVarnb, top_var_index, input_nb, inputSeeds)
+        andGatesSize = convertToAiger.conertToAiger(fileName, u_nb, c_nb, var_nb, latches_nb, outVarnb, top_var_index, fctIDs, outfctID,seeds,oseed, bdd_tuple, out_bdd_tuple)
+    else:
+        import DNFtoAIG
+        andGatesSize = DNFtoAIG.generate_DNF_aiger(fileName,u_nb,c_nb,latches_nb,inputSeeds,outVarnb,oseed)
+    
+    modelBase = "dnf"
+    if bddBased:
+        modelBase = "bdd"
+    toPrint = modelBase + ' ' + ntpath.basename(fileName) + ' ' + str((int(round(time.time() * 1000)) - startTime)) + 'ms AndGates ' + str(andGatesSize)
+    if not noABC:
         from shutil import copyfile
         abcFileName = os.path.splitext(fileName)[0] +'_abc.aag'
         copyfile(fileName, abcFileName)
         ABCMinimization.minimize(abcFileName)
-        print (fileName + '_abc: ', int(round(time.time() * 1000)) - startTime)
+        toPrint += ' ' + ntpath.basename(abcFileName) + ' ' + str((int(round(time.time() * 1000)) - startTime)) + 'ms'
+    print(toPrint)
