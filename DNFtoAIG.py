@@ -84,7 +84,7 @@ def generate_DNF_latch_fct(bitVec, var_nb, getAIGVarLiteral, input_nb, andGatesD
             else:
                 FAGID = createDNFAndGate(FAGID, andGateID, andGatesDNF,andGatesDNFMap)
             counter = counter + 1
-            if not moreThanOne and counter > 0:
+            if not moreThanOne and counter > 1:
                 moreThanOne = True
             if counter == 100000:
                 counter = 0
@@ -97,7 +97,7 @@ def generate_DNF_latch_fct(bitVec, var_nb, getAIGVarLiteral, input_nb, andGatesD
                 FinalFAGID = ag
             else:
                 FinalFAGID = createDNFAndGate(FinalFAGID, ag, andGatesDNF,andGatesDNFMap)
-    elif len(tempEndGates) > 0:
+    elif len(tempEndGates) == 1:
         FinalFAGID = tempEndGates[0]
     else:
         FinalFAGID = FAGID
@@ -105,10 +105,10 @@ def generate_DNF_latch_fct(bitVec, var_nb, getAIGVarLiteral, input_nb, andGatesD
         FinalFAGID = createDNFAndGate(FAGID, FinalFAGID, andGatesDNF,andGatesDNFMap)
     #print("******************************************")
     if moreThanOne:
-        return FAGID + 1 #DNF so we need to negate it
-    if FAGID == -1:
+        return FinalFAGID + 1 #DNF so we need to negate it
+    if FinalFAGID == -1:
         return 0
-    return FAGID
+    return FinalFAGID
 
 def get_DNF_aiger_input(input_nb):
     input_list = []
