@@ -1,9 +1,17 @@
-# AIGEN-Tool
-AIGEN is an open source tool for the generation of transition systems in the symbolic representation "AIGER". To ensure diversity, it employs a uniform random sampling over the space of all Boolean functions with a given number of variables. AIGEN relies on the fact that ROBDDs are canonical representations of Boolean functions, and uses an approach that is inspired by data structures used to implement ROBDDs. Several parameters allow the user to restrict random generation to certain types of Boolean functions or transition systems, which are then output in AIGER format. Alternatively a user can choose a canonical dnf based aproach for the random generation of transition systems instead of the BDD approach.
+                           ******************************* AIGEN Tool  *********************************
 
-To install the tool execute: ./setup.sh
+AIGEN is an open source tool for the generation of transition systems in a symbolic representation "AIGER". To ensure diversity, it employs a uniform random sampling over the space of all Boolean functions with a given number of variables. AIGEN relies on reduced ordered binary decision diagrams (ROBDDs) and canonical disjunctive normal form (CDNF) as canonical representations that allow us to enumerate Boolean functions, in the former case with an encoding that is inspired by data structures used to implement ROBDDs. Several parameters allow the user to restrict generation to Boolean functions or transition systems with certain properties, which are then output in AIGER
+format. .
 
-                           **********************************************************
+
+                           ******************************* INSTALLATION  *********************************
+
+
+To install the tool automatically run the following commands: (this will take around 15 minutes due to the abc tool compiling time)
+	- chmod +x setup.sh
+	- ./setup.sh
+
+                           **************************** Manual Installation ******************************
 
 To install it manually:
 
@@ -21,7 +29,7 @@ To install it manually:
 
 7- run the command: sudo apt-get install libtinfo-dev
 
-8- run the command: sudo dpkg -i libreadline-dev_7.0-3_amd64.deb
+8- run the command: sudo dpkg -i libreadline-dev_8.0-4_amd64.deb  (for ubuntu 18: sudo dpkg -i libreadline-dev_7.0-3_amd64.deb)
 
 9- Open abc-master folder
 
@@ -37,9 +45,9 @@ To install it manually:
 
 15- run the command: sudo apt-get install libmpc-dev
 
-16- run the command: pip install gmpy2
+16- run the command: pip3 install gmpy2 (for ubuntu 18: pip install gmpy2)
                                                       
-                           **********************************************************
+                           **************************** Test the Tool ************************************
                            
 To run the tool execute the command: 
 
@@ -61,8 +69,4 @@ python aigen.py -bdd -output random_n_14_4_3_7_6.aag -c 4 -u 3 -l 7 -o 6 -seeds 
 oseed is the seed for the random 6 variables chosen out of 7 latches.
 
 -noABC is an optional parameter which means that we do not want to run ABC and obtain a reduced version.
-
-For more information, check the readme file in the Test folder.
-
-
 
