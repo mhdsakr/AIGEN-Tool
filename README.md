@@ -49,24 +49,29 @@ To install it manually:
                                                       
                            **************************** Test the Tool ************************************
                            
-To run the tool execute the command: 
 
-python aigen.py -bdd -output file1.aag -c 1 -u 1 -l 10 -o 9
+AIGEN is pre-installed on this virtual machine in folder ”AIGEN-AE-Submission”.
 
+To test its basic functionality, you can run a simple command like: 
+
+python3 AIGEN-AE-Submission/aigen.py -bdd -output ReviewerTest.aag -c 1 -u 1 -l 5 -o 4 -noABC
 where:
+* FileName.aag is the file name to be generated.
 
-FileName.aag is the file name to be generated
--bdd means that use a bdd based random generation. When replaced by -dnf the tool will use canonical DNF based random generation.
-c=1 means 1 controllable input
-u=1 means 1 uncontrollable inputs
-l=10 means 10 latches (i.e. the tool will generate 12 boolean functions over 15 variables)
-o=9 means that 9 latches variable influences the output function (i.e. the output function will assign true to (l - o) variables and in this case (10-9) )
+* -bdd means that use a bdd based random generation. When replaced by
 
-or with seeds. Note that the number of seeds must be equal to l + 1
+* -dnf the tool will use canonical DNF based random generation.
+ 
+* -c 1 means 1 controllable input
 
-python aigen.py -bdd -output random_n_14_4_3_7_6.aag -c 4 -u 3 -l 7 -o 6 -seeds 1589315720245050 1589315720836518 1589315721306326 1589315721746553 1589315722185292 1589315722596544 1589315722995663 1589315723406943 -oseed 1589315723415047 -noABC
+* -u 1 means 1 uncontrollable inputs
 
-oseed is the seed for the random 6 variables chosen out of 7 latches.
+* -l 10 means 10 latches (i.e. the tool will generate 12 Boolean functions over 15 variables)
 
--noABC is an optional parameter which means that we do not want to run ABC and obtain a reduced version.
+* -o 9 means that 9 latches variable influences the output function (i.e. the output function will assign true to (l - o) variables and in this case (10-9)).
 
+* -noABC is an optional parameter. A user has to omit it if he wants to run the ABC tool minimization procedure that reduces the size of the generated AIGER file.
+
+After the call terminates, AIGEN will have generated the file ”FileName.aag”, including the resulting transition system in AIGER format and comments at the end of the file that include the parameters of its generation, namely the seeds that has been used to generate the random numbers for each latch, and the seed for choosing random 9 variables out of 10 to be used in the output function.
+
+To replicate an existing file (an AIGER file that was generated previously by AIGEN tool), use as arguments the same model (bdd or dnf), number of uncontrollable inputs, number of controllable inputs, number of latches, the same number of output variables, and the same seeds. All these info can be found as comments at the end of the file. Note that the number of seeds must be equal to l + 1.
